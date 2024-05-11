@@ -53,13 +53,7 @@ public class SpringBootReactorApplication implements CommandLineRunner{
 		
 		usuarios.subscribe(e -> log.info(e.toString()),
 				error -> log.error(error.getMessage()),
-				new Runnable() {
-					
-					@Override
-					public void run() {
-						log.info("Ha finalizado la ejecución del observable con éxito!");
-					}
-				});
+                () -> log.info("Ha finalizado la ejecución del observable con éxito!"));
 		
 	}
 }
