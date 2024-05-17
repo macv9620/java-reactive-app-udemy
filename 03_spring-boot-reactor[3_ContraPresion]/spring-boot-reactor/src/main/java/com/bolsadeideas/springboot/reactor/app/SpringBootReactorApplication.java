@@ -108,7 +108,7 @@ public class SpringBootReactorApplication implements CommandLineRunner {
 
 		CountDownLatch latch = new CountDownLatch(1);
 
-		Flux.interval(Duration.ofSeconds(1)).doOnTerminate(latch::countDown).flatMap(i -> {
+		Flux.interval(Duration.ofMillis(400)).doOnTerminate(latch::countDown).flatMap(i -> {
 			if (i >= 5) {
 				return Flux.error(new InterruptedException("Solo hasta 5!"));
 			}
@@ -127,7 +127,7 @@ public class SpringBootReactorApplication implements CommandLineRunner {
 
 	public void ejemploInterval() {
 		Flux<Integer> rango = Flux.range(1, 12);
-		Flux<Long> retraso = Flux.interval(Duration.ofSeconds(1));
+		Flux<Long> retraso = Flux.interval(Duration.ofMillis(500));
 
 		rango.zipWith(retraso, (ra, re) -> ra).doOnNext(i -> log.info(i.toString())).blockLast();
 	}
