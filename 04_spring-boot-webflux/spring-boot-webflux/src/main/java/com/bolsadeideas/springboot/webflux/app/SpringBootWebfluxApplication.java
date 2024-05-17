@@ -4,7 +4,6 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,15 +17,19 @@ import reactor.core.publisher.Flux;
 @SpringBootApplication
 public class SpringBootWebfluxApplication implements CommandLineRunner{
 
-	@Autowired
-	private ProductoDao dao;
+	private final ProductoDao dao;
 	
-	@Autowired
-	private ReactiveMongoTemplate mongoTemplate;
+
+	private final ReactiveMongoTemplate mongoTemplate;
 	
 	private static final Logger log = LoggerFactory.getLogger(SpringBootWebfluxApplication.class);
-	
-	public static void main(String[] args) {
+
+    public SpringBootWebfluxApplication(ProductoDao dao, ReactiveMongoTemplate mongoTemplate) {
+        this.dao = dao;
+        this.mongoTemplate = mongoTemplate;
+    }
+
+    public static void main(String[] args) {
 		SpringApplication.run(SpringBootWebfluxApplication.class, args);
 	}
 
