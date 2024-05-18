@@ -18,12 +18,15 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/api/productos")
 public class ProductoRestController {
 
-	@Autowired
-	private ProductoDao dao;
+	private final ProductoDao dao;
 	
 	private static final Logger log = LoggerFactory.getLogger(ProductoController.class);
-	
-	@GetMapping
+
+    public ProductoRestController(ProductoDao dao) {
+        this.dao = dao;
+    }
+
+    @GetMapping
 	public Flux<Producto> index(){
 
         Flux<Producto> productos = dao.findAll()

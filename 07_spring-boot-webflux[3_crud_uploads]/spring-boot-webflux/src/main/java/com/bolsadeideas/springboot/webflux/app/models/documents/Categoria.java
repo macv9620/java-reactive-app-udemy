@@ -1,7 +1,6 @@
 package com.bolsadeideas.springboot.webflux.app.models.documents;
 
-import javax.validation.constraints.NotEmpty;
-
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 

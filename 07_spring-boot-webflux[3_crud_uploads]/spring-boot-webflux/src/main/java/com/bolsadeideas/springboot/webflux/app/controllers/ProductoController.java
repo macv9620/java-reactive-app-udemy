@@ -8,11 +8,9 @@ import java.time.Duration;
 import java.util.Date;
 import java.util.UUID;
 
-import javax.validation.Valid;
-
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -29,12 +27,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-import org.thymeleaf.spring5.context.webflux.ReactiveDataDriverContextVariable;
 
 import com.bolsadeideas.springboot.webflux.app.models.documents.Categoria;
 import com.bolsadeideas.springboot.webflux.app.models.documents.Producto;
 import com.bolsadeideas.springboot.webflux.app.models.services.ProductoService;
 
+import org.thymeleaf.spring6.context.webflux.ReactiveDataDriverContextVariable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -42,15 +40,18 @@ import reactor.core.publisher.Mono;
 @Controller
 public class ProductoController {
 
-	@Autowired
-	private ProductoService service;
+	private final ProductoService service;
 	
 	@Value("${config.uploads.path}")
 	private String path;
 	
 	private static final Logger log = LoggerFactory.getLogger(ProductoController.class);
-	
-	@ModelAttribute("categorias")
+
+    public ProductoController(ProductoService service) {
+        this.service = service;
+    }
+
+    @ModelAttribute("categorias")
 	public Flux<Categoria> categorias(){
 		return service.findAllCategoria();
 	}
