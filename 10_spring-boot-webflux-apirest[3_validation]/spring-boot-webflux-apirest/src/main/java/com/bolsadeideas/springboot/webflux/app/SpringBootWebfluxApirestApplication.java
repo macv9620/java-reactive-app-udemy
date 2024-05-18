@@ -18,16 +18,17 @@ import reactor.core.publisher.Flux;
 
 @SpringBootApplication
 public class SpringBootWebfluxApirestApplication implements CommandLineRunner{
-
-	@Autowired
-	private ProductoService service;
-	
-	@Autowired
-	private ReactiveMongoTemplate mongoTemplate;
+	private final ProductoService service;
+	private final ReactiveMongoTemplate mongoTemplate;
 	
 	private static final Logger log = LoggerFactory.getLogger(SpringBootWebfluxApirestApplication.class);
-	
-	public static void main(String[] args) {
+
+    public SpringBootWebfluxApirestApplication(ProductoService service, ReactiveMongoTemplate mongoTemplate) {
+        this.service = service;
+        this.mongoTemplate = mongoTemplate;
+    }
+
+    public static void main(String[] args) {
 		SpringApplication.run(SpringBootWebfluxApirestApplication.class, args);
 	}
 

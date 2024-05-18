@@ -7,9 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,14 +33,17 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/api/productos")
 public class ProductoController {
-	
-	@Autowired
-	private ProductoService service;
+
+	private final ProductoService service;
 	
 	@Value("${config.uploads.path}")
 	private String path;
-	
-	@PostMapping("/v2")
+
+    public ProductoController(ProductoService service) {
+        this.service = service;
+    }
+
+    @PostMapping("/v2")
 	public Mono<ResponseEntity<Producto>> crearConFoto(Producto producto, @RequestPart FilePart file){
 		
 		if(producto.getCreateAt()==null) {
