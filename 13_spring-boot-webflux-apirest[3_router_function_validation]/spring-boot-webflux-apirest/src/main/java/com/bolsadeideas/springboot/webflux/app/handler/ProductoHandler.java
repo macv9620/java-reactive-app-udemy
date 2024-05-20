@@ -29,17 +29,20 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class ProductoHandler {
-	
-	@Autowired
-	private ProductoService service;
-	
+
+	private final ProductoService service;
+	private final Validator validator;
+
 	@Value("${config.uploads.path}")
 	private String path;
-	
-	@Autowired
-	private Validator validator;
-	
-	public Mono<ServerResponse> crearConFoto(ServerRequest request){
+
+
+    public ProductoHandler(ProductoService service, Validator validator) {
+        this.service = service;
+        this.validator = validator;
+    }
+
+    public Mono<ServerResponse> crearConFoto(ServerRequest request){
 
         Mono<Producto> producto = request.multipartData().map(multipart -> {
         	FormFieldPart nombre = (FormFieldPart) multipart.toSingleValueMap().get("nombre");
