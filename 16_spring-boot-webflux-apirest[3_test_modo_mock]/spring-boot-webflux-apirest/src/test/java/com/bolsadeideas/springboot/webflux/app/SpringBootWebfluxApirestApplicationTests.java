@@ -58,7 +58,6 @@ public class SpringBootWebfluxApirestApplicationTests {
 			
 			Assertions.assertThat(productos.size()>0).isTrue();
 		});
-		//.hasSize(9);
 	}
 	
 	@Test
