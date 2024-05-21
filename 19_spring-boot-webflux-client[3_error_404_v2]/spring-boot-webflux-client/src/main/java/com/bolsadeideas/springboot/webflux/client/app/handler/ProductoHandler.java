@@ -23,11 +23,18 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class ProductoHandler {
-	
-	@Autowired
-	private ProductoService service;
+	private final ProductoService service;
 
-	public Mono<ServerResponse> listar(ServerRequest request){
+    public ProductoHandler(ProductoService service) {
+        this.service = service;
+    }
+
+    public Mono<ServerResponse> listar(ServerRequest request){
+//		Alternativa
+//		return service.findAll()
+//				.collectList()
+//				.flatMap(products -> ServerResponse.ok().contentType(APPLICATION_JSON_UTF8).bodyValue(products));
+
 		return ServerResponse.ok().contentType(APPLICATION_JSON_UTF8)
 				.body(service.findAll(), Producto.class);
 	}
@@ -49,11 +56,20 @@ public class ProductoHandler {
 			if(p.getCreateAt()==null) {
 				p.setCreateAt(new Date());
 			}
+
+					System.out.println(p);
 			return service.save(p);
-			}).flatMap(p -> ServerResponse.created(URI.create("/api/client/".concat(p.getId())))
-					.contentType(APPLICATION_JSON_UTF8)
-					.syncBody(p))
+			})
+				.flatMap(p -> {
+					System.out.println("Producto retornado");
+					System.out.println(p);
+							return ServerResponse.created(URI.create("/api/client/".concat(p.getId())))
+									.contentType(APPLICATION_JSON_UTF8)
+									.syncBody(p);
+						}
+				)
 				.onErrorResume(error -> {
+					System.out.println(error);
 					WebClientResponseException errorResponse = (WebClientResponseException) error;
 					if(errorResponse.getStatusCode() == HttpStatus.BAD_REQUEST) {
 						return ServerResponse.badRequest()

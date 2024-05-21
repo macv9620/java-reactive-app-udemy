@@ -11,6 +11,18 @@ public class Producto {
 	private String foto;
 	private Categoria categoria;
 
+	public Producto() {
+	}
+
+	public Producto(String id, String nombre, Double precio, Date createAt, String foto, Categoria categoria) {
+		this.id = id;
+		this.nombre = nombre;
+		this.precio = precio;
+		this.createAt = createAt;
+		this.foto = foto;
+		this.categoria = categoria;
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -59,4 +71,15 @@ public class Producto {
 		this.categoria = categoria;
 	}
 
+	@Override
+	public String toString() {
+		return "Producto{" +
+				"id='" + id + '\'' +
+				", nombre='" + nombre + '\'' +
+				", precio=" + precio +
+				", createAt=" + createAt +
+				", foto='" + foto + '\'' +
+				", categoria=" + categoria +
+				'}';
+	}
 }

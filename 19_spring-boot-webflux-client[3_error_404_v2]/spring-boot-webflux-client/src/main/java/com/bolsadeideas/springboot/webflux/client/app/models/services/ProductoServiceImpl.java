@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.bolsadeideas.springboot.webflux.client.app.models.CreateProductResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.client.MultipartBodyBuilder;
@@ -21,11 +22,13 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class ProductoServiceImpl implements ProductoService {
+	private final WebClient client;
 
-	@Autowired
-	private WebClient client;
-	
-	@Override
+    public ProductoServiceImpl(WebClient client) {
+        this.client = client;
+    }
+
+    @Override
 	public Flux<Producto> findAll() {
 		return client.get().accept(APPLICATION_JSON_UTF8)
 				.exchange()
@@ -50,9 +53,10 @@ public class ProductoServiceImpl implements ProductoService {
 				.accept(APPLICATION_JSON_UTF8)
 				.contentType(APPLICATION_JSON_UTF8)
 				//.body(fromObject(producto))
-				.syncBody(producto)
+				.bodyValue(producto)
 				.retrieve()
-				.bodyToMono(Producto.class);
+				.bodyToMono(CreateProductResponse.class)
+				.map(CreateProductResponse::getProducto);
 	}
 
 	@Override
@@ -84,7 +88,7 @@ public class ProductoServiceImpl implements ProductoService {
 		return client.post()
 				.uri("/upload/{id}", Collections.singletonMap("id", id))
 				.contentType(MULTIPART_FORM_DATA)
-				.syncBody(parts.build())
+				.bodyValue(parts.build())
 				.retrieve()
 				.bodyToMono(Producto.class);
 	}
