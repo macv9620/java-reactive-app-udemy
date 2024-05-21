@@ -14,13 +14,16 @@ import reactor.core.publisher.Mono;
 @Service
 public class ProductoServiceImpl implements ProductoService{
 
-	@Autowired
-	private ProductoDao dao;
-	
-	@Autowired
-	private CategoriaDao categoriaDao;
-	
-	@Override
+	private final ProductoDao dao;
+
+	private final CategoriaDao categoriaDao;
+
+    public ProductoServiceImpl(ProductoDao dao, CategoriaDao categoriaDao) {
+        this.dao = dao;
+        this.categoriaDao = categoriaDao;
+    }
+
+    @Override
 	public Flux<Producto> findAll() {
 		return dao.findAll();
 	}
@@ -32,6 +35,7 @@ public class ProductoServiceImpl implements ProductoService{
 
 	@Override
 	public Mono<Producto> save(Producto producto) {
+		System.out.println(producto);
 		return dao.save(producto);
 	}
 

@@ -1,0 +1,366 @@
+{
+	"info": {
+		"_postman_id": "07851579-5826-4207-8c55-6c0d6adbf3f0",
+		"name": "WebFlux_Course",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33441179"
+	},
+	"item": [
+		{
+			"name": "products",
+			"item": [
+				{
+					"name": "GetAllProducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/api/productos",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetProductById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/api/v2/productos/664d0c41834fb72c8ee14c72",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"v2",
+								"productos",
+								"664d0c41834fb72c8ee14c72"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteProductById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/productos/664bad0ed5c21679b8f4d986",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"productos",
+								"664bad0ed5c21679b8f4d986"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateProduct",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"nombre\": \"{{$randomProduct}}\",\r\n   \"precio\": \"{{$randomPrice}}\",\r\n   \"categoria\": {\r\n        \"id\": \"6647fa6932b54f46218fdf0e\"\r\n   }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/productos",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AttachImageAndCreateProduct",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/mateo.castano/Downloads/prueba.png"
+								},
+								{
+									"key": "nombre",
+									"value": "Producto 5",
+									"type": "text"
+								},
+								{
+									"key": "precio",
+									"value": "1000",
+									"type": "text"
+								},
+								{
+									"key": "categoria.id",
+									"value": "{{$randomUUID}}",
+									"type": "text"
+								},
+								{
+									"key": "categoria.nombre",
+									"value": "{{$randomProductAdjective}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8080/api/productos/create/v2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"productos",
+								"create",
+								"v2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AttachAndUpdateImage",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/mateo.castano/Downloads/Presentacion_Reto.pdf"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8080/api/productos/upload/664badd494f2806462c00b80",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"productos",
+								"upload",
+								"664badd494f2806462c00b80"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateProduct",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Updated\",\r\n    \"precio\": \"20000\",\r\n    \"categoria\": {\r\n        \"id\": \"6647fa6932b54f46218fdf0e\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/productos/664badd494f2806462c00b80",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"productos",
+								"664badd494f2806462c00b80"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "client",
+			"item": [
+				{
+					"name": "GetAllProducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8090/api/client",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"client"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetProductById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8090/api/client/664d18d39c862f08ec7ac823",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"client",
+								"664d18d39c862f08ec7ac823"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteProductById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8090/api/client/664d18d39c862f08ec7ac823",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"client",
+								"664d18d39c862f08ec7ac823"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateProduct",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"nombre\": \"{{$randomProduct}}\",\r\n   \"precio\": \"{{$randomPrice}}\",\r\n   \"categoria\": {\r\n        \"id\": \"6647fa6932b54f46218fdf0e\",\r\n        \"nombre\": \"Random\"\r\n   }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8090/api/client",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"client"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AttachAndUpdateImage",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/mateo.castano/Downloads/Animation.gif"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8090/api/client/upload/664ca7921348376ae2a4a537",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"client",
+								"upload",
+								"664ca7921348376ae2a4a537"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateProduct",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Updated 6\",\r\n    \"precio\": \"20000\",\r\n    \"categoria\": {\r\n        \"id\": \"6647fa6932b54f46218fdf0e\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8090/api/client/664ca7921348376ae2a4a537",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"api",
+								"client",
+								"664ca7921348376ae2a4a537"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

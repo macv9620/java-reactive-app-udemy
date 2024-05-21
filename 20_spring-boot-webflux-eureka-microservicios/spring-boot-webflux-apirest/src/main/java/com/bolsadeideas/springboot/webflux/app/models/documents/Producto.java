@@ -2,10 +2,9 @@ package com.bolsadeideas.springboot.webflux.app.models.documents;
 
 import java.util.Date;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -83,7 +82,16 @@ public class Producto {
 	public void setFoto(String foto) {
 		this.foto = foto;
 	}
-	
-	
 
+	@Override
+	public String toString() {
+		return "Producto{" +
+				"id='" + id + '\'' +
+				", nombre='" + nombre + '\'' +
+				", precio=" + precio +
+				", createAt=" + createAt +
+				", categoria=" + categoria +
+				", foto='" + foto + '\'' +
+				'}';
+	}
 }

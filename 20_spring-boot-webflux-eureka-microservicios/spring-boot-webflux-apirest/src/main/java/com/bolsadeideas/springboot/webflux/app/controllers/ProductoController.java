@@ -7,8 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.validation.Valid;
-
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -36,13 +35,16 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/api/productos")
 public class ProductoController {
 	
-	@Autowired
-	private ProductoService service;
+	private final ProductoService service;
 	
 	@Value("${config.uploads.path}")
 	private String path;
-	
-	@PostMapping("/v2")
+
+    public ProductoController(ProductoService service) {
+        this.service = service;
+    }
+
+    @PostMapping("/v2")
 	public Mono<ResponseEntity<Producto>> crearConFoto(Producto producto, @RequestPart FilePart file){
 		
 		if(producto.getCreateAt()==null) {
@@ -57,7 +59,7 @@ public class ProductoController {
 		return file.transferTo(new File(path + producto.getFoto())).then(service.save(producto))
 				.map(p-> ResponseEntity
 				.created(URI.create("/api/productos/".concat(p.getId())))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.contentType(MediaType.APPLICATION_JSON)
 				.body(p)
 				);
 		
@@ -80,7 +82,7 @@ public class ProductoController {
 	public Mono<ResponseEntity<Flux<Producto>>> lista(){
 		return Mono.just(
 				ResponseEntity.ok()
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.contentType(MediaType.APPLICATION_JSON)
 				.body(service.findAll())
 				);
 	}
@@ -88,7 +90,7 @@ public class ProductoController {
 	@GetMapping("/{id}")
 	public Mono<ResponseEntity<Producto>> ver(@PathVariable String id){
 		return service.findById(id).map(p -> ResponseEntity.ok()
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.contentType(MediaType.APPLICATION_JSON)
 				.body(p))
 				.defaultIfEmpty(ResponseEntity.notFound().build());
 	}
@@ -109,7 +111,7 @@ public class ProductoController {
 				respuesta.put("timestamp", new Date());
 				return ResponseEntity
 					.created(URI.create("/api/productos/".concat(p.getId())))
-					.contentType(MediaType.APPLICATION_JSON_UTF8)
+					.contentType(MediaType.APPLICATION_JSON)
 					.body(respuesta);
 				});
 			
@@ -139,7 +141,7 @@ public class ProductoController {
 			p.setCategoria(producto.getCategoria());
 			return service.save(p);
 		}).map(p->ResponseEntity.created(URI.create("/api/productos/".concat(p.getId())))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.contentType(MediaType.APPLICATION_JSON)
 				.body(p))
 		.defaultIfEmpty(ResponseEntity.notFound().build());
 	}

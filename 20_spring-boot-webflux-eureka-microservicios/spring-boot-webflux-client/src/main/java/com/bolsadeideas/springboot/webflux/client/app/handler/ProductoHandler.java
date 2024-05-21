@@ -23,12 +23,19 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class ProductoHandler {
-	
-	@Autowired
-	private ProductoService service;
+	private final ProductoService service;
 
-	public Mono<ServerResponse> listar(ServerRequest request){
-		return ServerResponse.ok().contentType(APPLICATION_JSON_UTF8)
+    public ProductoHandler(ProductoService service) {
+        this.service = service;
+    }
+
+    public Mono<ServerResponse> listar(ServerRequest request){
+//		Alternativa
+//		return service.findAll()
+//				.collectList()
+//				.flatMap(products -> ServerResponse.ok().contentType(APPLICATION_JSON).bodyValue(products));
+
+		return ServerResponse.ok().contentType(APPLICATION_JSON)
 				.body(service.findAll(), Producto.class);
 	}
 	
@@ -36,7 +43,7 @@ public class ProductoHandler {
 		String id = request.pathVariable("id");
 		return errorHandler(
 				service.findById(id).flatMap(p -> ServerResponse.ok()
-				.contentType(APPLICATION_JSON_UTF8)
+				.contentType(APPLICATION_JSON)
 				.syncBody(p))
 				.switchIfEmpty(ServerResponse.notFound().build())
 				);
@@ -49,15 +56,24 @@ public class ProductoHandler {
 			if(p.getCreateAt()==null) {
 				p.setCreateAt(new Date());
 			}
+
+					System.out.println(p);
 			return service.save(p);
-			}).flatMap(p -> ServerResponse.created(URI.create("/api/client/".concat(p.getId())))
-					.contentType(APPLICATION_JSON_UTF8)
-					.syncBody(p))
+			})
+				.flatMap(p -> {
+					System.out.println("Producto retornado");
+					System.out.println(p);
+							return ServerResponse.created(URI.create("/api/client/".concat(p.getId())))
+									.contentType(APPLICATION_JSON)
+									.syncBody(p);
+						}
+				)
 				.onErrorResume(error -> {
+					System.out.println(error);
 					WebClientResponseException errorResponse = (WebClientResponseException) error;
 					if(errorResponse.getStatusCode() == HttpStatus.BAD_REQUEST) {
 						return ServerResponse.badRequest()
-								.contentType(APPLICATION_JSON_UTF8)
+								.contentType(APPLICATION_JSON)
 								.syncBody(errorResponse.getResponseBodyAsString());
 					}
 					return Mono.error(errorResponse);
@@ -72,7 +88,7 @@ public class ProductoHandler {
 				producto
 				.flatMap(p -> service.update(p, id))
 				.flatMap(p-> ServerResponse.created(URI.create("/api/client/".concat(p.getId())))
-				.contentType(APPLICATION_JSON_UTF8)
+				.contentType(APPLICATION_JSON)
 				.syncBody(p))
 				);
 	}
@@ -91,7 +107,7 @@ public class ProductoHandler {
 				.cast(FilePart.class)
 				.flatMap(file -> service.upload(file, id))
 				.flatMap(p -> ServerResponse.created(URI.create("/api/client/".concat(p.getId())))
-						.contentType(APPLICATION_JSON_UTF8)
+						.contentType(APPLICATION_JSON)
 						.syncBody(p))
 				);
 	}

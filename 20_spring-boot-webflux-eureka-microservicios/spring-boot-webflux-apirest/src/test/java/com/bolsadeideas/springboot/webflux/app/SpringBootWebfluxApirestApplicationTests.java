@@ -5,15 +5,18 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
+
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import com.bolsadeideas.springboot.webflux.app.models.documents.Categoria;
@@ -24,13 +27,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import reactor.core.publisher.Mono;
 
 @AutoConfigureWebTestClient
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class SpringBootWebfluxApirestApplicationTests {
-	
+
 	@Autowired
 	private WebTestClient client;
-	
+
 	@Autowired
 	private ProductoService service;
 	
@@ -42,10 +45,10 @@ public class SpringBootWebfluxApirestApplicationTests {
 		
 		client.get()
 		.uri(url)
-		.accept(MediaType.APPLICATION_JSON_UTF8)
+		.accept(MediaType.APPLICATION_JSON)
 		.exchange()
 		.expectStatus().isOk()
-		.expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+		.expectHeader().contentType(MediaType.APPLICATION_JSON)
 		.expectBodyList(Producto.class)
 		.consumeWith(response -> {
 			List<Producto> productos = response.getResponseBody();
@@ -55,7 +58,6 @@ public class SpringBootWebfluxApirestApplicationTests {
 			
 			Assertions.assertThat(productos.size()>0).isTrue();
 		});
-		//.hasSize(9);
 	}
 	
 	@Test
@@ -65,10 +67,10 @@ public class SpringBootWebfluxApirestApplicationTests {
 		
 		client.get()
 		.uri(url + "/{id}", Collections.singletonMap("id", producto.getId()))
-		.accept(MediaType.APPLICATION_JSON_UTF8)
+		.accept(MediaType.APPLICATION_JSON)
 		.exchange()
 		.expectStatus().isOk()
-		.expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+		.expectHeader().contentType(MediaType.APPLICATION_JSON)
 		.expectBody(Producto.class)
 		.consumeWith(response -> {
 			Producto p = response.getResponseBody();
@@ -89,12 +91,12 @@ public class SpringBootWebfluxApirestApplicationTests {
 		Producto producto = new Producto("Mesa comedor", 100.00, categoria);
 		
 		client.post().uri(url)
-		.contentType(MediaType.APPLICATION_JSON_UTF8)
-		.accept(MediaType.APPLICATION_JSON_UTF8)
+		.contentType(MediaType.APPLICATION_JSON)
+		.accept(MediaType.APPLICATION_JSON)
 		.body(Mono.just(producto), Producto.class)
 		.exchange()
 		.expectStatus().isCreated()
-		.expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+		.expectHeader().contentType(MediaType.APPLICATION_JSON)
 		.expectBody()
 		.jsonPath("$.producto.id").isNotEmpty()
 		.jsonPath("$.producto.nombre").isEqualTo("Mesa comedor")
@@ -109,12 +111,12 @@ public class SpringBootWebfluxApirestApplicationTests {
 		Producto producto = new Producto("Mesa comedor", 100.00, categoria);
 		
 		client.post().uri(url)
-		.contentType(MediaType.APPLICATION_JSON_UTF8)
-		.accept(MediaType.APPLICATION_JSON_UTF8)
+		.contentType(MediaType.APPLICATION_JSON)
+		.accept(MediaType.APPLICATION_JSON)
 		.body(Mono.just(producto), Producto.class)
 		.exchange()
 		.expectStatus().isCreated()
-		.expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+		.expectHeader().contentType(MediaType.APPLICATION_JSON)
 		.expectBody(new ParameterizedTypeReference<LinkedHashMap<String, Object>>() {})
 		.consumeWith(response -> {
 			Object o = response.getResponseBody().get("producto");
@@ -134,12 +136,12 @@ public class SpringBootWebfluxApirestApplicationTests {
 		Producto productoEditado = new Producto("Asus Notebook", 700.00, categoria);
 		
 		client.put().uri(url + "/{id}", Collections.singletonMap("id", producto.getId()))
-		.contentType(MediaType.APPLICATION_JSON_UTF8)
-		.accept(MediaType.APPLICATION_JSON_UTF8)
+		.contentType(MediaType.APPLICATION_JSON)
+		.accept(MediaType.APPLICATION_JSON)
 		.body(Mono.just(productoEditado), Producto.class)
 		.exchange()
 		.expectStatus().isCreated()
-		.expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+		.expectHeader().contentType(MediaType.APPLICATION_JSON)
 		.expectBody()
 		.jsonPath("$.id").isNotEmpty()
 		.jsonPath("$.nombre").isEqualTo("Asus Notebook")

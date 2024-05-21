@@ -29,17 +29,20 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class ProductoHandler {
-	
-	@Autowired
-	private ProductoService service;
-	
+
+	private final ProductoService service;
+	private final Validator validator;
+
 	@Value("${config.uploads.path}")
 	private String path;
-	
-	@Autowired
-	private Validator validator;
-	
-	public Mono<ServerResponse> crearConFoto(ServerRequest request){
+
+
+    public ProductoHandler(ProductoService service, Validator validator) {
+        this.service = service;
+        this.validator = validator;
+    }
+
+    public Mono<ServerResponse> crearConFoto(ServerRequest request){
 
         Mono<Producto> producto = request.multipartData().map(multipart -> {
         	FormFieldPart nombre = (FormFieldPart) multipart.toSingleValueMap().get("nombre");
@@ -66,7 +69,7 @@ public class ProductoHandler {
 					
 					return file.transferTo(new File(path + p.getFoto())).then(service.save(p));
 				})).flatMap(p -> ServerResponse.created(URI.create("/api/v2/productos/".concat(p.getId())))
-						.contentType(MediaType.APPLICATION_JSON_UTF8)
+						.contentType(MediaType.APPLICATION_JSON)
 						.body(fromObject(p)));
 	}
 	
@@ -83,14 +86,14 @@ public class ProductoHandler {
 					.replace("\\", ""));
 					return file.transferTo(new File(path + p.getFoto())).then(service.save(p));
 				})).flatMap(p -> ServerResponse.created(URI.create("/api/v2/productos/".concat(p.getId())))
-						.contentType(MediaType.APPLICATION_JSON_UTF8)
+						.contentType(MediaType.APPLICATION_JSON)
 						.body(fromObject(p)))
 				.switchIfEmpty(ServerResponse.notFound().build());
 	}
 	
 	public Mono<ServerResponse> listar(ServerRequest request){
 		return ServerResponse.ok()
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.contentType(MediaType.APPLICATION_JSON)
 				.body(service.findAll(), Producto.class);
 	}
 	
@@ -99,7 +102,7 @@ public class ProductoHandler {
 		String id = request.pathVariable("id");
 		return service.findById(id).flatMap( p -> ServerResponse
 				.ok()
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.contentType(MediaType.APPLICATION_JSON)
 				.body(fromObject(p)))
 				.switchIfEmpty(ServerResponse.notFound().build());
 	}
@@ -123,7 +126,7 @@ public class ProductoHandler {
 				}
 				return service.save(p).flatMap(pdb -> ServerResponse
 						.created(URI.create("/api/v2/productos/".concat(pdb.getId())))
-						.contentType(MediaType.APPLICATION_JSON_UTF8)
+						.contentType(MediaType.APPLICATION_JSON)
 						.body(fromObject(pdb)));
 			}
 			
@@ -142,7 +145,7 @@ public class ProductoHandler {
 			db.setCategoria(req.getCategoria());
 			return db;
 		}).flatMap(p -> ServerResponse.created(URI.create("/api/v2/productos/".concat(p.getId())))
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.contentType(MediaType.APPLICATION_JSON)
 				.body(service.save(p), Producto.class))
 		.switchIfEmpty(ServerResponse.notFound().build());
 		

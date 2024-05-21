@@ -13,7 +13,7 @@ public class AppConfig {
 	private String url;
 	
 	@Bean
-    @LoadBalanced
+	@LoadBalanced
 	public WebClient.Builder registrarWebClient() {
 		return WebClient.builder().baseUrl(url);
 	}
